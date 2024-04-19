@@ -24,8 +24,8 @@ services:
     image: 'ttionya/vaultwarden-backup:1.19.10'
     restart: unless-stopped
     volumes:
-      - ./data/:/bitwarden/data/
-      - vaultwarden-rclone-data:/config/
+      - ./data:/bitwarden/data
+      - vaultwarden-rclone-data:/config
     environment:
       RCLONE_REMOTE_NAME: 'VaultwardenBackup'
       RCLONE_REMOTE_DIR: '/vaultwarden_backup/'
@@ -45,6 +45,7 @@ networks:
     ipam:
       config:
         - subnet: 172.18.3.0/24
+
 volumes:
   vaultwarden-rclone-data:
     external: true
