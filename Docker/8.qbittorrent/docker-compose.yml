@@ -1,0 +1,39 @@
+services:
+  flood:
+    container_name: 'flood-ui'
+    image: 'jesec/flood:4.7.0'
+    restart: unless-stopped
+    depends_on:
+      - qbittorrent
+    command: '--auth=none --qburl=http://qbittorrent:8080'
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./data/flood:/config
+      - /path/to/downloads:/downloads
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - qbit_network
+  qbittorrent:
+    container_name: 'qbittorrent'
+    image: "lscr.io/linuxserver/qbittorrent:4.6.4"
+    restart: unless-stopped
+    ports:
+      - 8080:8080
+      - 54321:54321/tcp
+      - 54321:54321/udp
+    environment:
+      TZ: 'Asia/Ho_Chi_Minh'
+      TORRENTING_PORT: 54321
+    volumes:
+      - ./data/qbittorrent:/config
+      - /path/to/downloads:/downloads
+    networks:
+      - qbit_network
+
+networks:
+  qbit_network:
+    name: 'qbit_network'
+    ipam:
+      config:
+        - subnet: 172.18.8.0/24
