@@ -9,16 +9,14 @@ services:
       - ./data:/vmagentdata
       - ./config/:/etc/prometheus
     command:
-      - "--promscrape.config=/etc/prometheus/prometheus.yml"
-      - "--remoteWrite.url=https://${VM_ENDPOINT:?error}/api/v1/write"
+      - '--promscrape.config=/etc/prometheus/prometheus.yml'
+      - '--remoteWrite.url=https://${VM_ENDPOINT:?error}/api/v1/write'
     networks:
       - monitoring_network
   node-exporter:
     container_name: 'node-exporter'
     image: 'prom/node-exporter:v1.8.0'
     restart: unless-stopped
-    ports:
-      - '9100:9100'
     volumes:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
@@ -28,6 +26,15 @@ services:
       - '--path.rootfs=/rootfs'
       - '--path.sysfs=/host/sys'
       - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    networks:
+      - monitoring_network
+  endlessh:
+    container_name: 'endlessh'
+    image: 'shizunge/endlessh-go:latest'
+    restart: unless-stopped
+    ports:
+      - '2222:2222'
+    command: '-interval_ms 10000 -geoip_supplier ip-api -enable_prometheus -logtostderr -v=1'
     networks:
       - monitoring_network
 

@@ -19,9 +19,9 @@ services:
     image: "lscr.io/linuxserver/qbittorrent:4.6.4"
     restart: unless-stopped
     ports:
-      - 8080:8080
-      - 54321:54321/tcp
-      - 54321:54321/udp
+#      - '8080:8080'
+      - '54321:54321/tcp'
+      - '54321:54321/udp'
     environment:
       TZ: 'Asia/Ho_Chi_Minh'
       TORRENTING_PORT: 54321

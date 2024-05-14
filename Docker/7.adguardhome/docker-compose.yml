@@ -16,3 +16,6 @@ services:
 networks:
   adguardhome_network:
     name: 'adguardhome_network'
+    ipam:
+      config:
+        - subnet: 172.18.7.0/24
