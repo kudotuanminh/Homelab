@@ -3,8 +3,6 @@ services:
     container_name: 'vmagent'
     image: 'victoriametrics/vmagent:v1.101.0'
     restart: unless-stopped
-    ports:
-      - '8429:8429'
     volumes:
       - ./data:/vmagentdata
       - ./config/:/etc/prometheus
@@ -28,6 +26,16 @@ services:
       - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
     networks:
       - monitoring_network
+  cadvisor:
+    container_name: 'cadvisor'
+    image: 'gcr.io/cadvisor/cadvisor:v0.49.1'
+    volumes:
+    - /:/rootfs:ro
+    - /var/run:/var/run:rw
+    - /sys:/sys:ro
+    - /var/lib/docker/:/var/lib/docker:ro
+    networks:
+    - monitoring_network
   endlessh:
     container_name: 'endlessh'
     image: 'shizunge/endlessh-go:latest'

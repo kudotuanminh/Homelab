@@ -5,11 +5,13 @@ services:
     restart: unless-stopped
     ports:
       - '8082:80'
+      - '8442:443'
       - '53:53'
       - '53:53/udp'
     volumes:
       - ./data/config:/opt/adguardhome/conf
       - ./data/data:/opt/adguardhome/work/data
+      - ./data/letsencrypt:/opt/adguardhome/letsencrypt
     networks:
       - adguardhome_network
 
