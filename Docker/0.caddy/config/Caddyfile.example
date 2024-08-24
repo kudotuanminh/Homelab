@@ -15,6 +15,7 @@ ${DOMAIN} {
 			tls_insecure_skip_verify
 		}
 	}
+	encode zstd gzip
 	log {
 		output file /log/${DOMAIN}.log
 	}
