@@ -1,7 +1,7 @@
 services:
   portainer:
     container_name: 'portainer'
-    image: 'portainer/portainer-ce:2.20.1-alpine'
+    image: 'portainer/portainer-ce:2.21.0-rc2-alpine'
     restart: unless-stopped
     ports:
       - '9000:9000'
