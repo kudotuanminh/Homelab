@@ -10,7 +10,7 @@ services:
       - ./data/config:/etc/wireguard
       - ./data/lib-modules:/lib/modules
     environment:
-      PASSWORD: ${PASSWORD:?error}
+      PASSWORD_HASH: ${PASSWORD_HASH:?error}
       WG_HOST: ${WG_HOST:?error}
       WG_PERSISTENT_KEEPALIVE: '25'
       WG_ALLOWED_IPS: ${WG_ALLOWED_IPS:-0.0.0.0/0}
