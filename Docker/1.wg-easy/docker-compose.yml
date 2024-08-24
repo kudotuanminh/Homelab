@@ -1,7 +1,7 @@
 services:
   wg-easy:
     container_name: 'wg-easy'
-    image: 'ghcr.io/wg-easy/wg-easy:12'
+    image: 'ghcr.io/wg-easy/wg-easy:14'
     restart: unless-stopped
     ports:
       - '51820:51820/udp'

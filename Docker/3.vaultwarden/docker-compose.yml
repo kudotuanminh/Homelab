@@ -1,12 +1,12 @@
 services:
   vaultwarden:
     container_name: 'vaultwarden'
-    image: 'vaultwarden/server:1.30.5-alpine'
+    image: 'vaultwarden/server:1.32.0-alpine'
     restart: unless-stopped
     ports:
       - '8081:80'
     volumes:
-      - ./data:/data
+      - ./data/vaultwarden:/data
     environment:
       TZ: 'Asia/Ho_Chi_Minh'
       DOMAIN: ${DOMAIN:?error}
@@ -21,11 +21,11 @@ services:
       - vaultwarden_network
   backup:
     container_name: 'vaultwarden-backup'
-    image: 'ttionya/vaultwarden-backup:1.19.10'
+    image: 'ttionya/vaultwarden-backup:1.20.0'
     restart: unless-stopped
     volumes:
-      - ./data:/bitwarden/data
-      - vaultwarden-rclone-data:/config
+      - ./data/vaultwarden:/bitwarden/data
+      - ./data/vault-backup:/config
     environment:
       RCLONE_REMOTE_NAME: 'VaultwardenBackup'
       RCLONE_REMOTE_DIR: '/vaultwarden_backup/'
@@ -45,8 +45,3 @@ networks:
     ipam:
       config:
         - subnet: 172.18.3.0/24
-
-volumes:
-  vaultwarden-rclone-data:
-    external: true
-    name: vaultwarden-rclone-data
