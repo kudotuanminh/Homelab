@@ -1,0 +1,21 @@
+{
+	servers {
+		metrics
+	}
+	admin 0.0.0.0:2019
+}
+
+${DOMAIN} {
+	tls {$CLOUDFLARE_EMAIL} {
+		dns cloudflare {$CLOUDFLARE_API_TOKEN}
+	}
+	reverse_proxy ${HOST}:${PORT} {
+		transport http {
+			tls
+			tls_insecure_skip_verify
+		}
+	}
+	log {
+		output file /log/${DOMAIN}.log
+	}
+}
