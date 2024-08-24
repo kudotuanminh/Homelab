@@ -4,8 +4,8 @@ services:
     image: 'adguard/adguardhome:v0.107.52'
     restart: unless-stopped
     ports:
-      - '8082:80'
-      - '8442:443'
+      - '7080:80'
+      - '7443:443'
       - '53:53'
       - '53:53/udp'
     volumes:

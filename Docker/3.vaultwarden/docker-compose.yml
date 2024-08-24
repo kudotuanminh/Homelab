@@ -4,7 +4,7 @@ services:
     image: 'vaultwarden/server:1.32.0-alpine'
     restart: unless-stopped
     ports:
-      - '8081:80'
+      - '3080:80'
     environment:
       TZ: 'Asia/Ho_Chi_Minh'
       DOMAIN: ${DOMAIN:?error}
