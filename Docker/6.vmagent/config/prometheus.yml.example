@@ -5,6 +5,6 @@ scrape_configs:
   - job_name: '${HOSTNAME}'
     static_configs:
       - targets: ['vmagent:8429', 'node-exporter:9100', 'cadvisor:8080', 'endlessh:2112']
-  - job_name: 'victoriametrics'
+  - job_name: 'Grafana_VictoriaMetrics'
     static_configs:
-      - targets: ['victoriametrics:8428']
+      - targets: ['victoriametrics:8428', 'grafana:3000']
