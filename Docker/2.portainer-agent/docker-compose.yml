@@ -1,7 +1,7 @@
 services:
   portainer-agent:
     container_name: 'portainer_agent'
-    image: 'portainer/agent:2.21.0-alpine'
+    image: 'portainer/agent:2.21.3-alpine'
     restart: unless-stopped
     ports:
       - '29001:9001'
