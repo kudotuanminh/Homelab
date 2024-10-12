@@ -1,7 +1,7 @@
 services:
   flood:
     container_name: 'flood-ui'
-    image: 'jesec/flood:4.7.0'
+    image: 'jesec/flood:4.8.4'
     restart: unless-stopped
     depends_on:
       - qbittorrent
@@ -16,7 +16,7 @@ services:
       - qbit_network
   qbittorrent:
     container_name: 'qbittorrent'
-    image: "lscr.io/linuxserver/qbittorrent:4.6.4"
+    image: "lscr.io/linuxserver/qbittorrent:5.0.0"
     restart: unless-stopped
     ports:
 #      - '8081:8080'
