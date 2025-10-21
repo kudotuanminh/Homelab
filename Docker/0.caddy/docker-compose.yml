@@ -3,7 +3,7 @@ services:
     build:
       context: .
       args:
-        CADDY_VERSION: '2.8.4'
+        CADDY_VERSION: '2.10.2'
     container_name: 'caddy'
     restart: unless-stopped
     ports:
@@ -20,6 +20,10 @@ services:
       - /var/log/caddy:/log
     networks:
       - caddy_network
+    logging:
+      driver: local
+      options:
+        max-size: "200m"
 
 networks:
   caddy_network:

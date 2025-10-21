@@ -1,7 +1,7 @@
 services:
   vaultwarden:
     container_name: 'vaultwarden'
-    image: 'vaultwarden/server:1.32.0-alpine'
+    image: 'vaultwarden/server:1.34.3-alpine'
     restart: unless-stopped
     ports:
       - '3080:80'
@@ -15,13 +15,20 @@ services:
       SIGNUPS_ALLOWED: ${SIGNUPS_ALLOWED:-true}
       LOG_FILE: '/data/vaultwarden.log'
       EXTENDED_LOGGING: true
+      YUBICO_CLIENT_ID: ${YUBICO_CLIENT_ID:?error}
+      YUBICO_SECRET_KEY: ${YUBICO_SECRET_KEY:?error}
     volumes:
       - ./data/vaultwarden:/data
     networks:
       - vaultwarden_network
+    logging:
+      driver: local
+      options:
+        max-size: "200m"
+
   backup:
     container_name: 'vaultwarden-backup'
-    image: 'ttionya/vaultwarden-backup:1.20.0'
+    image: 'ttionya/vaultwarden-backup:1.25.1'
     restart: unless-stopped
     volumes:
       - ./data/vaultwarden:/bitwarden/data
@@ -38,6 +45,10 @@ services:
       TIMEZONE: 'Asia/Ho_Chi_Minh'
     networks:
       - vaultwarden_network
+    logging:
+      driver: local
+      options:
+        max-size: "200m"
 
 networks:
   vaultwarden_network:
