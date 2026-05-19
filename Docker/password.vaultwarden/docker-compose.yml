@@ -1,10 +1,9 @@
+name: vaultwarden
 services:
   vaultwarden:
     container_name: 'vaultwarden'
-    image: 'vaultwarden/server:1.34.3-alpine'
+    image: 'vaultwarden/server:1.36.0-alpine'
     restart: unless-stopped
-    ports:
-      - '3080:80'
     environment:
       TZ: 'Asia/Ho_Chi_Minh'
       DOMAIN: ${DOMAIN:?error}
@@ -20,9 +19,9 @@ services:
     volumes:
       - ./data/vaultwarden:/data
     networks:
-      - vaultwarden_network
+      - proxy
     logging:
-      driver: local
+      driver: json-file
       options:
         max-size: "200m"
 
@@ -43,16 +42,15 @@ services:
       BACKUP_KEEP_DAYS: 7
       PING_URL: ${BACKUP_PING_URL:?error}
       TIMEZONE: 'Asia/Ho_Chi_Minh'
-    networks:
-      - vaultwarden_network
     logging:
-      driver: local
+      driver: json-file
       options:
         max-size: "200m"
 
 networks:
-  vaultwarden_network:
-    name: 'vaultwarden_network'
-    ipam:
-      config:
-        - subnet: 172.18.3.0/24
+  default:
+    name: vaultwarden
+    driver: bridge
+  proxy:
+    name: proxy
+    external: true

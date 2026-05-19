@@ -1,14 +1,14 @@
+name: caddy
 services:
   caddy:
     build:
       context: .
       args:
-        CADDY_VERSION: '2.10.2'
+        CADDY_VERSION: '2.11.2'
     container_name: 'caddy'
     restart: unless-stopped
     ports:
       - '443:443'
-      - '2019:2019'
     environment:
       CLOUDFLARE_EMAIL: ${CLOUDFLARE_EMAIL:?error}
       CLOUDFLARE_API_TOKEN: ${CLOUDFLARE_API_TOKEN:?error}
@@ -18,16 +18,13 @@ services:
       - ./data/config:/config
       - ./config:/etc/caddy
       - /var/log/caddy:/log
-    networks:
-      - caddy_network
     logging:
-      driver: local
+      driver: json-file
       options:
         max-size: "200m"
 
 networks:
-  caddy_network:
-    name: 'caddy_network'
-    ipam:
-      config:
-        - subnet: 172.18.0.0/24
+  default:
+    name: proxy
+#    external: true
+    driver: bridge
