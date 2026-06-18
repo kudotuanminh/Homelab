@@ -19,6 +19,7 @@ services:
     volumes:
       - ./data/vaultwarden:/data
     networks:
+      - default
       - proxy
     logging:
       driver: json-file

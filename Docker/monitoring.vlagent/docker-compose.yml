@@ -1,0 +1,21 @@
+services:
+  promtail:
+    container_name: 'promtail'
+    image: 'grafana/promtail:3.5.0'
+    restart: unless-stopped
+    volumes:
+      - ./config/promtail-config.yml:/etc/promtail/config.yml:ro
+      - /var/log:/var/log:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+    command:
+      - '-config.file=/etc/promtail/config.yml'
+      - '-config.expand-env=true'
+    logging:
+      driver: json-file
+      options:
+        max-size: "200m"
+
+networks:
+  default:
+    name: monitoring_network
+    external: true

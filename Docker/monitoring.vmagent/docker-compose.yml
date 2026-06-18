@@ -1,34 +1,29 @@
 services:
   vmagent:
     container_name: 'vmagent'
-    image: 'victoriametrics/vmagent:v1.126.0'
+    image: 'victoriametrics/vmagent:v1.144.0'
     restart: unless-stopped
     volumes:
-      - ./data:/vmagentdata
-      - ./config/:/etc/prometheus
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
     command:
       - '--promscrape.config=/etc/prometheus/prometheus.yml'
-      - '--remoteWrite.url=https://${VM_ENDPOINT:?error}/api/v1/write'
-    networks:
-      - monitoring_network
-  node-exporter:
-    container_name: 'node-exporter'
-    image: 'prom/node-exporter:v1.9.1'
+      - '--remoteWrite.url=${VM_ENDPOINT:?error}/api/v1/write'
+  node_exporter:
+    container_name: 'node_exporter'
+    image: 'prom/node-exporter:v1.11.1-distroless'
     restart: unless-stopped
     volumes:
+      - /:/rootfs:ro
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
-      - /:/rootfs:ro
     command:
-      - '--path.procfs=/host/proc'
       - '--path.rootfs=/rootfs'
+      - '--path.procfs=/host/proc'
       - '--path.sysfs=/host/sys'
       - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
-    networks:
-      - monitoring_network
   cadvisor:
     container_name: 'cadvisor'
-    image: 'gcr.io/cadvisor/cadvisor:v0.52.0'
+    image: 'gcr.io/cadvisor/cadvisor:v0.55.1'
     restart: unless-stopped
     volumes:
     - /:/rootfs:ro
@@ -38,22 +33,16 @@ services:
     command:
       - '--housekeeping_interval=10s'
       - '--docker_only=true'
-    networks:
-    - monitoring_network
   endlessh:
     container_name: 'endlessh'
     image: 'shizunge/endlessh-go:latest'
     restart: unless-stopped
     ports:
-      - '2222:2222'
+      - '22:2222'
     command: '-interval_ms 10000 -geoip_supplier ip-api -enable_prometheus -logtostderr -v=1'
-    networks:
-      - monitoring_network
 
 networks:
-  monitoring_network:
-    name: 'monitoring_network'
+  default:
+    name: monitoring
     external: true
-#    ipam:
-#      config:
-#        - subnet: 172.18.6.0/24
+#    driver: bridge

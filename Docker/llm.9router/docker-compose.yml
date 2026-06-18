@@ -1,0 +1,26 @@
+services:
+  9router:
+    container_name: '9router'
+    image: 'decolua/9router:0.5.4'
+    restart: unless-stopped
+    ports:
+      - '20128:20128'
+    volumes:
+      - ./data:/app/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - default
+      - proxy
+    logging:
+      driver: json-file
+      options:
+        max-size: "200m"
+
+networks:
+  default:
+    name: 9router
+    driver: bridge
+  proxy:
+    name: proxy
+    external: true

@@ -18,6 +18,9 @@ services:
       - ./data/config:/config
       - ./config:/etc/caddy
       - /var/log/caddy:/log
+    networks:
+      - default
+      - monitoring
     logging:
       driver: json-file
       options:
@@ -26,5 +29,7 @@ services:
 networks:
   default:
     name: proxy
-#    external: true
     driver: bridge
+  monitoring:
+    name: monitoring
+    external: true

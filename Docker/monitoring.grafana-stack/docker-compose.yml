@@ -1,0 +1,69 @@
+name: grafana-stack
+services:
+  victoriametrics:
+    container_name: 'victoriametrics'
+    image: 'victoriametrics/victoria-metrics:v1.143.0'
+    restart: unless-stopped
+    volumes:
+      - ./data/victoriametrics:/vmdata
+    command:
+      - '--storageDataPath=/vmdata'
+      - '--httpListenAddr=:8428'
+      - '--retentionPeriod=${VM_RETENTION_PERIOD:-30d}'
+    networks:
+      - default
+      - proxy
+    logging:
+      driver: json-file
+      options:
+        max-size: "200m"
+
+  victorialogs:
+    container_name: 'victorialogs'
+    image: 'victoriametrics/victoria-logs:v1.50.0'
+    restart: unless-stopped
+    volumes:
+      - ./data/victorialogs:/vlogs
+    command:
+      - '--storageDataPath=/vlogs'
+      - '--httpListenAddr=:9428'
+      - '--retentionPeriod=${VL_RETENTION_PERIOD:-30d}'
+    networks:
+      - default
+      - proxy
+    logging:
+      driver: json-file
+      options:
+        max-size: "200m"
+
+  grafana:
+    container_name: 'grafana'
+    image: 'grafana/grafana:12.4.3'
+    restart: unless-stopped
+    depends_on:
+      - victoriametrics
+      - victorialogs
+    environment:
+      TZ: 'Asia/Ho_Chi_Minh'
+      GF_SECURITY_ADMIN_PASSWORD: ${GF_ADMIN_PASSWORD:?error}
+      GF_SERVER_ROOT_URL: ${GF_ROOT_URL:?error}
+      GF_INSTALL_PLUGINS: 'victoriametrics-metrics-datasource,victoriametrics-logs-datasource'
+    volumes:
+      - ./data/grafana:/var/lib/grafana
+      - ./config/grafana/grafana.ini:/etc/grafana/grafana.ini:ro
+      - ./config/grafana/provisioning:/etc/grafana/provisioning:ro
+    networks:
+      - default
+      - proxy
+    logging:
+      driver: json-file
+      options:
+        max-size: "200m"
+
+networks:
+  default:
+    name: monitoring
+    driver: bridge
+  proxy:
+    name: proxy
+    external: true
